@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const ProjectFolder = ({ project, onClick, index }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
+const ProjectFolder = ({ project, onClick, index, onHover, isHovered }) => {
   return (
     <div 
       className="relative group cursor-pointer"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => onHover(project)}
+      onMouseLeave={() => onHover(null)}
       onClick={() => onClick(project)}
       style={{ animationDelay: `${index * 100}ms` }}
     >
@@ -39,40 +37,7 @@ const ProjectFolder = ({ project, onClick, index }) => {
             {project.date}
           </div>
         </div>
-
-        {/* Hover preview */}
-        {isHovered && (
-          <div 
-            className="absolute left-6 top-0 flex space-x-1 z-10 animate-fade-in"
-            style={{ animationDuration: '300ms' }}
-          >
-            {project.previewImages.slice(0, 3).map((image, idx) => (
-              <div
-                key={idx}
-                className="preview-card w-20 h-24 bg-white border border-gray-200 shadow-lg transform transition-all duration-300"
-                style={{ 
-                  transform: `translateX(${idx * 2}px) translateY(${idx * 2}px) rotate(${idx * 2 - 2}deg)`,
-                  zIndex: 3 - idx
-                }}
-              >
-                <img 
-                  src={image} 
-                  alt={`${project.title} preview ${idx + 1}`}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-            ))}
-          </div>
-        )}
       </div>
-
-      {/* Hover info */}
-      {isHovered && (
-        <div className="absolute left-0 -bottom-12 bg-black text-white px-2 py-1 text-xs whitespace-nowrap z-20 animate-fade-in">
-          {project.description.substring(0, 50)}...
-        </div>
-      )}
     </div>
   );
 };
