@@ -82,7 +82,7 @@ const Portfolio = () => {
       </header>
 
       {/* Main Content */}
-      <main className="px-6 py-8">
+      <main className="px-4 md:px-6 py-6 md:py-8">
         <div className="max-w-7xl mx-auto">
           {/* Projects Grid */}
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-6 md:gap-8">
