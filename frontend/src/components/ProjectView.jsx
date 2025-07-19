@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, FileText, BookOpen, Download } from 'lucide-react';
 
-const ProjectView = ({ project, onBack }) => {
+const ProjectView = ({ project, onBack, hideNavigation }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
@@ -22,34 +22,51 @@ const ProjectView = ({ project, onBack }) => {
     setIsImageModalOpen(true);
   };
 
+  const downloadDocument = (doc) => {
+    const link = document.createElement('a');
+    link.href = doc.data;
+    link.download = doc.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const formatFileSize = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-black transition-colors">
       {/* Header */}
-      <header className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 z-30">
+      <header className="sticky top-0 bg-white dark:bg-black border-b border-gray-200 dark:border-white px-6 py-4 z-30 transition-colors">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button
               onClick={onBack}
-              className="p-2 hover:bg-gray-100 transition-colors group"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors group"
             >
-              <ChevronLeft className="w-5 h-5 text-gray-600 group-hover:text-gray-900" />
+              <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
             </button>
             <div 
               className="w-6 h-6 rounded"
               style={{ backgroundColor: project.color }}
             ></div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{project.title}</h1>
-              <p className="text-sm text-gray-500">{project.date}</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">{project.title}</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 transition-colors">{project.date}</p>
             </div>
           </div>
           
           {/* Close button */}
           <button
             onClick={onBack}
-            className="p-2 hover:bg-gray-100 transition-colors group rounded-full"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors group rounded-full"
           >
-            <X className="w-5 h-5 text-gray-600 group-hover:text-gray-900" />
+            <X className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
           </button>
         </div>
       </header>
@@ -59,13 +76,45 @@ const ProjectView = ({ project, onBack }) => {
         <div className="max-w-4xl mx-auto">
           {/* Project Description */}
           <div className="mb-8">
-            <p className="text-lg text-gray-700 leading-relaxed">
+            <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed transition-colors">
               {project.description}
             </p>
           </div>
 
+          {/* Documents Section */}
+          {project.documents && project.documents.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">Documents</h2>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {project.documents.map((doc) => (
+                  <div key={doc.id} className="flex items-center justify-between p-4 border-2 border-black dark:border-white bg-white dark:bg-black hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+                    <div className="flex items-center space-x-3">
+                      {doc.type === 'application/pdf' ? (
+                        <FileText className="w-6 h-6 text-red-500" />
+                      ) : (
+                        <BookOpen className="w-6 h-6 text-blue-500" />
+                      )}
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-white transition-colors">{doc.name}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 transition-colors">{formatFileSize(doc.size)}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => downloadDocument(doc)}
+                      className="p-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors rounded"
+                      title="Download"
+                    >
+                      <Download className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Image Gallery */}
           <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white transition-colors">Gallery</h2>
             {project.images.map((image, index) => (
               <div 
                 key={index}
@@ -76,7 +125,7 @@ const ProjectView = ({ project, onBack }) => {
                 <img
                   src={image}
                   alt={`${project.title} - Image ${index + 1}`}
-                  className="w-full h-auto shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                  className="w-full h-auto shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] border-2 border-black dark:border-white"
                   loading="lazy"
                 />
               </div>
