@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import ProjectFolder from './ProjectFolder';
 import ProjectView from './ProjectView';
 import EditPanel from './EditPanel';
+import LogoEditor from './LogoEditor';
 import { Moon, Sun } from 'lucide-react';
-import { mockProjects } from '../data/mockData';
+import { mockProjects, mockSiteData } from '../data/mockData';
+import { getDarkMode, setDarkMode, initializeDarkMode } from '../utils/darkMode';
 
 const Portfolio = () => {
   const [projects, setProjects] = useState(mockProjects);
@@ -12,15 +14,20 @@ const Portfolio = () => {
   const [showEditPanel, setShowEditPanel] = useState(false);
   const [hoveredProject, setHoveredProject] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [siteData, setSiteData] = useState(mockSiteData);
+  const [showLogoEditor, setShowLogoEditor] = useState(false);
 
-  // Apply dark mode to document
+  // Initialize dark mode from localStorage
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
+    const darkMode = initializeDarkMode();
+    setIsDarkMode(darkMode);
+  }, []);
+
+  const handleDarkModeToggle = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    setDarkMode(newMode);
+  };
 
   const handleProjectClick = (project) => {
     if (!isEditMode) {
@@ -61,17 +68,39 @@ const Portfolio = () => {
     setProjects(prevProjects => [project, ...prevProjects]);
   };
 
+  const handleLogoUpdate = (logoData) => {
+    setSiteData(logoData);
+  };
+
   if (selectedProject) {
-    return <ProjectView project={selectedProject} onBack={() => setSelectedProject(null)} />;
+    return <ProjectView project={selectedProject} onBack={() => setSelectedProject(null)} hideNavigation />;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative transition-colors">
+    <div className="min-h-screen bg-gray-50 dark:bg-black relative transition-colors">
       {/* Header */}
-      <header className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 md:px-6 py-4 z-30 mt-16 transition-colors">
+      <header className="sticky top-0 bg-white dark:bg-black border-b border-gray-200 dark:border-white px-4 md:px-6 py-4 z-30 mt-16 transition-colors">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white transition-colors">Work</h1>
+            {/* Logo */}
+            <div 
+              className={`flex items-center space-x-2 ${isEditMode ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 p-2 rounded' : ''}`}
+              onClick={isEditMode ? () => setShowLogoEditor(true) : undefined}
+            >
+              {siteData.logoImage ? (
+                <img 
+                  src={siteData.logoImage} 
+                  alt="Logo" 
+                  className="h-8 w-8 object-contain"
+                />
+              ) : (
+                <div className="h-8 w-8 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center text-sm font-bold">
+                  {siteData.logo}
+                </div>
+              )}
+              {isEditMode && <span className="text-xs text-gray-500">Click to edit</span>}
+            </div>
+            
             <div className="text-sm text-gray-500 dark:text-gray-400">
               {projects.length} projects
             </div>
@@ -80,8 +109,8 @@ const Portfolio = () => {
           <div className="flex items-center space-x-3">
             {/* Dark Mode Toggle */}
             <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+              onClick={handleDarkModeToggle}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-900 rounded-full transition-colors"
               title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
               {isDarkMode ? (
@@ -96,7 +125,7 @@ const Portfolio = () => {
               className={`px-3 py-2 md:px-4 md:py-2 text-xs md:text-sm font-medium border transition-all duration-300 ${
                 isEditMode 
                   ? 'bg-red-600 text-white border-red-600 hover:bg-red-700' 
-                  : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
+                  : 'bg-white dark:bg-black text-gray-700 dark:text-white border-gray-300 dark:border-white hover:bg-gray-50 dark:hover:bg-gray-900'
               }`}
             >
               {isEditMode ? 'Exit Edit' : 'Edit Mode'}
@@ -148,11 +177,11 @@ const Portfolio = () => {
       {/* Bottom Preview Images - Centered (Desktop Only) */}
       {hoveredProject && (
         <div className="hidden md:block fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 animate-fade-in">
-          <div className="flex space-x-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-2xl border-2 border-black dark:border-gray-300 transition-colors">
+          <div className="flex space-x-6 bg-white dark:bg-black p-6 rounded-lg shadow-2xl border-2 border-black dark:border-white transition-colors">
             {hoveredProject.previewImages.slice(0, 3).map((image, idx) => (
               <div
                 key={idx}
-                className="preview-card w-44 h-56 bg-white dark:bg-gray-700 border-2 border-black dark:border-gray-300 shadow-lg overflow-hidden transition-colors"
+                className="preview-card w-44 h-56 bg-white dark:bg-black border-2 border-black dark:border-white shadow-lg overflow-hidden transition-colors"
                 style={{ 
                   animationDelay: `${idx * 100}ms`
                 }}
@@ -172,6 +201,15 @@ const Portfolio = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors">{hoveredProject.date}</p>
           </div>
         </div>
+      )}
+
+      {/* Logo Editor */}
+      {showLogoEditor && (
+        <LogoEditor
+          siteData={siteData}
+          onSave={handleLogoUpdate}
+          onClose={() => setShowLogoEditor(false)}
+        />
       )}
 
       {/* Edit Panel */}
