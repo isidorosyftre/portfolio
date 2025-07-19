@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ProjectFolder from './ProjectFolder';
 import ProjectView from './ProjectView';
 import EditPanel from './EditPanel';
+import { Moon, Sun } from 'lucide-react';
 import { mockProjects } from '../data/mockData';
 
 const Portfolio = () => {
@@ -10,6 +11,16 @@ const Portfolio = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [showEditPanel, setShowEditPanel] = useState(false);
   const [hoveredProject, setHoveredProject] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Apply dark mode to document
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   const handleProjectClick = (project) => {
     if (!isEditMode) {
@@ -21,7 +32,7 @@ const Portfolio = () => {
     const password = prompt('Enter password to enable edit mode:');
     if (password === 'rafa2005') {
       setIsEditMode(!isEditMode);
-      setShowEditPanel(!showEditPanel);
+      setShowEditPanel(false);
     } else if (password !== null) {
       alert('Incorrect password');
     }
@@ -55,24 +66,37 @@ const Portfolio = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 relative">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 relative transition-colors">
       {/* Header */}
-      <header className="sticky top-0 bg-white border-b border-gray-200 px-4 md:px-6 py-4 z-30 mt-16">
+      <header className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 md:px-6 py-4 z-30 mt-16 transition-colors">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900">Work</h1>
-            <div className="text-sm text-gray-500">
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white transition-colors">Work</h1>
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               {projects.length} projects
             </div>
           </div>
           
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+              title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {isDarkMode ? (
+                <Sun className="w-5 h-5 text-yellow-500" />
+              ) : (
+                <Moon className="w-5 h-5 text-gray-600" />
+              )}
+            </button>
+            
             <button
               onClick={handleEditToggle}
               className={`px-3 py-2 md:px-4 md:py-2 text-xs md:text-sm font-medium border transition-all duration-300 ${
                 isEditMode 
                   ? 'bg-red-600 text-white border-red-600 hover:bg-red-700' 
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
               }`}
             >
               {isEditMode ? 'Exit Edit' : 'Edit Mode'}
@@ -85,9 +109,9 @@ const Portfolio = () => {
       <main className="px-4 md:px-6 py-6 md:py-8">
         <div className="max-w-7xl mx-auto">
           {/* Projects Grid */}
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-6 md:gap-8">
             {projects.map((project, index) => (
-              <div key={project.id} className="animate-slide-up">
+              <div key={project.id} className="animate-slide-up relative">
                 <ProjectFolder 
                   project={project} 
                   onClick={handleProjectClick}
@@ -96,10 +120,10 @@ const Portfolio = () => {
                   index={index}
                 />
                 {isEditMode && (
-                  <div className="mt-2 flex flex-col space-y-1">
+                  <div className="absolute -bottom-2 left-0 right-0 flex flex-col space-y-1 z-20">
                     <button
                       onClick={() => setShowEditPanel(project)}
-                      className="text-xs bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 transition-colors"
+                      className="text-xs bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 transition-colors shadow-lg"
                     >
                       Edit
                     </button>
@@ -109,7 +133,7 @@ const Portfolio = () => {
                           handleProjectDelete(project.id);
                         }
                       }}
-                      className="text-xs bg-red-500 text-white px-2 py-1 hover:bg-red-600 transition-colors"
+                      className="text-xs bg-red-500 text-white px-2 py-1 hover:bg-red-600 transition-colors shadow-lg"
                     >
                       Delete
                     </button>
@@ -124,11 +148,11 @@ const Portfolio = () => {
       {/* Bottom Preview Images - Centered (Desktop Only) */}
       {hoveredProject && (
         <div className="hidden md:block fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 animate-fade-in">
-          <div className="flex space-x-6 bg-white p-6 rounded-lg shadow-2xl border-2 border-black">
+          <div className="flex space-x-6 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-2xl border-2 border-black dark:border-gray-300 transition-colors">
             {hoveredProject.previewImages.slice(0, 3).map((image, idx) => (
               <div
                 key={idx}
-                className="preview-card w-44 h-56 bg-white border-2 border-black shadow-lg overflow-hidden"
+                className="preview-card w-44 h-56 bg-white dark:bg-gray-700 border-2 border-black dark:border-gray-300 shadow-lg overflow-hidden transition-colors"
                 style={{ 
                   animationDelay: `${idx * 100}ms`
                 }}
@@ -144,8 +168,8 @@ const Portfolio = () => {
           </div>
           {/* Project title below preview */}
           <div className="text-center mt-4">
-            <p className="text-lg font-bold text-gray-900">{hoveredProject.title}</p>
-            <p className="text-sm text-gray-600">{hoveredProject.date}</p>
+            <p className="text-lg font-bold text-gray-900 dark:text-white transition-colors">{hoveredProject.title}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors">{hoveredProject.date}</p>
           </div>
         </div>
       )}
