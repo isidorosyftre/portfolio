@@ -85,7 +85,7 @@ const Portfolio = () => {
       <main className="px-6 py-8">
         <div className="max-w-7xl mx-auto">
           {/* Projects Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-8">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-6 md:gap-8">
             {projects.map((project, index) => (
               <div key={project.id} className="animate-slide-up">
                 <ProjectFolder 
@@ -96,7 +96,7 @@ const Portfolio = () => {
                   index={index}
                 />
                 {isEditMode && (
-                  <div className="mt-2 flex space-x-1">
+                  <div className="mt-2 flex flex-col space-y-1">
                     <button
                       onClick={() => setShowEditPanel(project)}
                       className="text-xs bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 transition-colors"
