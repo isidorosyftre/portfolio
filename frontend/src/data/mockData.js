@@ -122,6 +122,7 @@ export const mockAboutData = {
   name: 'Rafael Designer',
   title: 'Graphic Designer & Creative Director',
   bio: 'Passionate graphic designer with over 8 years of experience creating meaningful visual experiences. I specialize in brand identity, web design, and print materials that tell compelling stories.',
+  profilePhoto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face',
   email: 'rafa@design.com',
   phone: '+1 (555) 123-4567',
   location: 'New York, NY',
