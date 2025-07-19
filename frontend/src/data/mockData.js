@@ -151,3 +151,8 @@ export const mockAboutData = {
     }
   ]
 };
+
+export const mockSiteData = {
+  logo: 'RD', // Default logo text
+  logoImage: null // Can be a base64 image
+};
