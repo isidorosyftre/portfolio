@@ -9,6 +9,7 @@ const Portfolio = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [showEditPanel, setShowEditPanel] = useState(false);
+  const [hoveredProject, setHoveredProject] = useState(null);
 
   const handleProjectClick = (project) => {
     if (!isEditMode) {
@@ -90,6 +91,8 @@ const Portfolio = () => {
                 <ProjectFolder 
                   project={project} 
                   onClick={handleProjectClick}
+                  onHover={setHoveredProject}
+                  isHovered={hoveredProject?.id === project.id}
                   index={index}
                 />
                 {isEditMode && (
@@ -117,6 +120,35 @@ const Portfolio = () => {
           </div>
         </div>
       </main>
+
+      {/* Bottom Preview Images - Centered */}
+      {hoveredProject && (
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 animate-fade-in">
+          <div className="flex space-x-4 bg-white p-4 rounded-lg shadow-2xl border border-gray-200">
+            {hoveredProject.previewImages.slice(0, 3).map((image, idx) => (
+              <div
+                key={idx}
+                className="preview-card w-32 h-40 bg-white border border-gray-300 shadow-lg overflow-hidden"
+                style={{ 
+                  animationDelay: `${idx * 100}ms`
+                }}
+              >
+                <img 
+                  src={image} 
+                  alt={`${hoveredProject.title} preview ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+          {/* Project title below preview */}
+          <div className="text-center mt-2">
+            <p className="text-sm font-semibold text-gray-900">{hoveredProject.title}</p>
+            <p className="text-xs text-gray-600">{hoveredProject.date}</p>
+          </div>
+        </div>
+      )}
 
       {/* Edit Panel */}
       {showEditPanel && (
