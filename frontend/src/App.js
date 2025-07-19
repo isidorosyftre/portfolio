@@ -8,13 +8,13 @@ const Navigation = () => {
   const location = useLocation();
   
   return (
-    <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-black text-white font-mono text-sm flex shadow-lg">
+    <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-black dark:bg-gray-800 text-white font-mono text-sm flex shadow-lg transition-colors">
       <Link 
         to="/" 
-        className={`px-6 py-3 transition-colors border-r border-gray-600 ${
+        className={`px-6 py-3 transition-colors border-r border-gray-600 dark:border-gray-500 ${
           location.pathname === '/' 
-            ? 'bg-white text-black' 
-            : 'hover:bg-gray-800'
+            ? 'bg-white dark:bg-gray-200 text-black dark:text-gray-900' 
+            : 'hover:bg-gray-800 dark:hover:bg-gray-700'
         }`}
       >
         WORK
@@ -23,8 +23,8 @@ const Navigation = () => {
         to="/about" 
         className={`px-6 py-3 transition-colors ${
           location.pathname === '/about' 
-            ? 'bg-white text-black' 
-            : 'hover:bg-gray-800'
+            ? 'bg-white dark:bg-gray-200 text-black dark:text-gray-900' 
+            : 'hover:bg-gray-800 dark:hover:bg-gray-700'
         }`}
       >
         ABOUT
