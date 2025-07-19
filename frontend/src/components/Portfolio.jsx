@@ -121,14 +121,14 @@ const Portfolio = () => {
         </div>
       </main>
 
-      {/* Bottom Preview Images - Centered */}
+      {/* Bottom Preview Images - Centered (Desktop Only) */}
       {hoveredProject && (
-        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 animate-fade-in">
-          <div className="flex space-x-4 bg-white p-4 rounded-lg shadow-2xl border border-gray-200">
+        <div className="hidden md:block fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 animate-fade-in">
+          <div className="flex space-x-6 bg-white p-6 rounded-lg shadow-2xl border-2 border-black">
             {hoveredProject.previewImages.slice(0, 3).map((image, idx) => (
               <div
                 key={idx}
-                className="preview-card w-32 h-40 bg-white border border-gray-300 shadow-lg overflow-hidden"
+                className="preview-card w-44 h-56 bg-white border-2 border-black shadow-lg overflow-hidden"
                 style={{ 
                   animationDelay: `${idx * 100}ms`
                 }}
@@ -143,9 +143,9 @@ const Portfolio = () => {
             ))}
           </div>
           {/* Project title below preview */}
-          <div className="text-center mt-2">
-            <p className="text-sm font-semibold text-gray-900">{hoveredProject.title}</p>
-            <p className="text-xs text-gray-600">{hoveredProject.date}</p>
+          <div className="text-center mt-4">
+            <p className="text-lg font-bold text-gray-900">{hoveredProject.title}</p>
+            <p className="text-sm text-gray-600">{hoveredProject.date}</p>
           </div>
         </div>
       )}
