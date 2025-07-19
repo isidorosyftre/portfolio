@@ -160,37 +160,37 @@ const About = () => {
           </div>
 
           {/* Bio Section */}
-          <div className="mb-12 animate-slide-up" style={{ animationDelay: '200ms' }}>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">About Me</h2>
+          <div className="mb-8 md:mb-12 animate-slide-up" style={{ animationDelay: '200ms' }}>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">About Me</h2>
             {isEditMode ? (
               <textarea
                 value={editData.bio}
                 onChange={(e) => handleInputChange('bio', e.target.value)}
                 rows={4}
-                className="w-full text-lg text-gray-700 leading-relaxed border border-gray-300 rounded-md p-4 focus:border-blue-500 outline-none"
+                className="w-full text-base md:text-lg text-gray-700 leading-relaxed border border-gray-300 rounded-md p-4 focus:border-blue-500 outline-none"
               />
             ) : (
-              <p className="text-lg text-gray-700 leading-relaxed">{displayData.bio}</p>
+              <p className="text-base md:text-lg text-gray-700 leading-relaxed">{displayData.bio}</p>
             )}
           </div>
 
           {/* Contact Info */}
-          <div className="grid md:grid-cols-2 gap-12 mb-12">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 mb-8 md:mb-12">
             {/* Contact Details */}
             <div className="animate-slide-up" style={{ animationDelay: '400ms' }}>
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Contact</h3>
-              <div className="space-y-4">
+              <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-4 md:mb-6">Contact</h3>
+              <div className="space-y-3 md:space-y-4">
                 <div className="flex items-center space-x-3">
-                  <Mail className="w-5 h-5 text-gray-500" />
+                  <Mail className="w-4 h-4 md:w-5 md:h-5 text-gray-500 flex-shrink-0" />
                   {isEditMode ? (
                     <input
                       type="email"
                       value={editData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="flex-1 border-b border-gray-300 focus:border-blue-500 outline-none bg-transparent"
+                      className="flex-1 border-b border-gray-300 focus:border-blue-500 outline-none bg-transparent text-sm md:text-base"
                     />
                   ) : (
-                    <a href={`mailto:${displayData.email}`} className="text-gray-700 hover:text-blue-500 transition-colors">
+                    <a href={`mailto:${displayData.email}`} className="text-gray-700 hover:text-blue-500 transition-colors text-sm md:text-base break-all">
                       {displayData.email}
                     </a>
                   )}
