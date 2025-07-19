@@ -128,11 +128,11 @@ const About = () => {
       </header>
 
       {/* Content */}
-      <main className="px-6 py-8">
+      <main className="px-4 md:px-6 py-6 md:py-8">
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
-          <div className="text-center mb-12 animate-fade-in">
-            <div className="w-32 h-32 bg-gray-300 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl text-gray-600 font-bold">
+          <div className="text-center mb-8 md:mb-12 animate-fade-in">
+            <div className="w-24 h-24 md:w-32 md:h-32 bg-gray-300 rounded-full mx-auto mb-4 md:mb-6 flex items-center justify-center text-2xl md:text-4xl text-gray-600 font-bold">
               {displayData.name.split(' ').map(n => n[0]).join('')}
             </div>
             
@@ -142,19 +142,19 @@ const About = () => {
                   type="text"
                   value={editData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="text-4xl font-bold text-center w-full border-b-2 border-gray-300 focus:border-blue-500 outline-none bg-transparent"
+                  className="text-2xl md:text-4xl font-bold text-center w-full border-b-2 border-gray-300 focus:border-blue-500 outline-none bg-transparent"
                 />
                 <input
                   type="text"
                   value={editData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
-                  className="text-xl text-gray-600 text-center w-full border-b border-gray-300 focus:border-blue-500 outline-none bg-transparent"
+                  className="text-lg md:text-xl text-gray-600 text-center w-full border-b border-gray-300 focus:border-blue-500 outline-none bg-transparent"
                 />
               </div>
             ) : (
               <>
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">{displayData.name}</h1>
-                <p className="text-xl text-gray-600">{displayData.title}</p>
+                <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">{displayData.name}</h1>
+                <p className="text-lg md:text-xl text-gray-600">{displayData.title}</p>
               </>
             )}
           </div>
