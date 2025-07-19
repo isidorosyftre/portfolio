@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Phone, MapPin, Globe, Instagram, Linkedin, Edit2, Save, X, Upload, Moon, Sun } from 'lucide-react';
 import { mockAboutData } from '../data/mockData';
+import { getDarkMode, setDarkMode, initializeDarkMode } from '../utils/darkMode';
 
 const About = () => {
   const [aboutData, setAboutData] = useState(mockAboutData);
@@ -8,14 +9,17 @@ const About = () => {
   const [editData, setEditData] = useState(mockAboutData);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Apply dark mode to document
-  React.useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
+  // Initialize dark mode from localStorage
+  useEffect(() => {
+    const darkMode = initializeDarkMode();
+    setIsDarkMode(darkMode);
+  }, []);
+
+  const handleDarkModeToggle = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    setDarkMode(newMode);
+  };
 
   // Convert file to base64
   const convertToBase64 = (file) => {
@@ -127,16 +131,16 @@ const About = () => {
   const displayData = isEditMode ? editData : aboutData;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-white dark:bg-black transition-colors">
       {/* Header */}
-      <header className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 md:px-6 py-4 z-30 mt-16 transition-colors">
+      <header className="sticky top-0 bg-white dark:bg-black border-b border-gray-200 dark:border-white px-4 md:px-6 py-4 z-30 mt-16 transition-colors">
         <div className="flex items-center justify-between">
           <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white transition-colors">About</h1>
           <div className="flex items-center space-x-3">
             {/* Dark Mode Toggle */}
             <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+              onClick={handleDarkModeToggle}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-900 rounded-full transition-colors"
               title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
               {isDarkMode ? (
@@ -186,7 +190,7 @@ const About = () => {
                 <img
                   src={displayData.profilePhoto}
                   alt={displayData.name}
-                  className="w-full h-full rounded-full object-cover border-2 border-gray-300 dark:border-gray-600"
+                  className="w-full h-full rounded-full object-cover border-2 border-gray-300 dark:border-white"
                 />
               ) : (
                 <div className="w-full h-full bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center text-2xl md:text-4xl text-gray-600 dark:text-gray-300 font-bold">
@@ -217,13 +221,13 @@ const About = () => {
                   type="text"
                   value={editData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="text-2xl md:text-4xl font-bold text-center w-full border-b-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent text-gray-900 dark:text-white"
+                  className="text-2xl md:text-4xl font-bold text-center w-full border-b-2 border-gray-300 dark:border-white focus:border-blue-500 outline-none bg-transparent text-gray-900 dark:text-white"
                 />
                 <input
                   type="text"
                   value={editData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
-                  className="text-lg md:text-xl text-gray-600 dark:text-gray-400 text-center w-full border-b border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent"
+                  className="text-lg md:text-xl text-gray-600 dark:text-gray-400 text-center w-full border-b border-gray-300 dark:border-white focus:border-blue-500 outline-none bg-transparent"
                 />
               </div>
             ) : (
@@ -242,7 +246,7 @@ const About = () => {
                 value={editData.bio}
                 onChange={(e) => handleInputChange('bio', e.target.value)}
                 rows={4}
-                className="w-full text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed border border-gray-300 dark:border-gray-600 rounded-md p-4 focus:border-blue-500 outline-none bg-white dark:bg-gray-800"
+                className="w-full text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed border border-gray-300 dark:border-white rounded-md p-4 focus:border-blue-500 outline-none bg-white dark:bg-black"
               />
             ) : (
               <p className="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed transition-colors">{displayData.bio}</p>
@@ -262,7 +266,7 @@ const About = () => {
                       type="email"
                       value={editData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="flex-1 border-b border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
+                      className="flex-1 border-b border-gray-300 dark:border-white focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
                     />
                   ) : (
                     <a href={`mailto:${displayData.email}`} className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors text-sm md:text-base break-all">
@@ -278,7 +282,7 @@ const About = () => {
                       type="tel"
                       value={editData.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
-                      className="flex-1 border-b border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
+                      className="flex-1 border-b border-gray-300 dark:border-white focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
                     />
                   ) : (
                     <a href={`tel:${displayData.phone}`} className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors text-sm md:text-base">
@@ -294,7 +298,7 @@ const About = () => {
                       type="text"
                       value={editData.location}
                       onChange={(e) => handleInputChange('location', e.target.value)}
-                      className="flex-1 border-b border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
+                      className="flex-1 border-b border-gray-300 dark:border-white focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
                     />
                   ) : (
                     <span className="text-gray-700 dark:text-gray-300 text-sm md:text-base transition-colors">{displayData.location}</span>
@@ -308,7 +312,7 @@ const About = () => {
                       type="url"
                       value={editData.website}
                       onChange={(e) => handleInputChange('website', e.target.value)}
-                      className="flex-1 border-b border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
+                      className="flex-1 border-b border-gray-300 dark:border-white focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
                     />
                   ) : (
                     <a href={`https://${displayData.website}`} target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors text-sm md:text-base break-all">
@@ -330,7 +334,7 @@ const About = () => {
                       type="text"
                       value={editData.social.instagram}
                       onChange={(e) => handleSocialChange('instagram', e.target.value)}
-                      className="flex-1 border-b border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
+                      className="flex-1 border-b border-gray-300 dark:border-white focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
                     />
                   ) : (
                     <a href={`https://instagram.com/${displayData.social.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-gray-300 hover:text-pink-500 dark:hover:text-pink-400 transition-colors text-sm md:text-base">
@@ -346,7 +350,7 @@ const About = () => {
                       type="text"
                       value={editData.social.linkedin}
                       onChange={(e) => handleSocialChange('linkedin', e.target.value)}
-                      className="flex-1 border-b border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
+                      className="flex-1 border-b border-gray-300 dark:border-white focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
                     />
                   ) : (
                     <a href={`https://linkedin.com/in/${displayData.social.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm md:text-base">
@@ -362,7 +366,7 @@ const About = () => {
                       type="text"
                       value={editData.social.behance}
                       onChange={(e) => handleSocialChange('behance', e.target.value)}
-                      className="flex-1 border-b border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
+                      className="flex-1 border-b border-gray-300 dark:border-white focus:border-blue-500 outline-none bg-transparent text-sm md:text-base text-gray-900 dark:text-white"
                     />
                   ) : (
                     <a href={`https://behance.net/${displayData.social.behance}`} target="_blank" rel="noopener noreferrer" className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors text-sm md:text-base">
@@ -386,7 +390,7 @@ const About = () => {
                         type="text"
                         value={skill}
                         onChange={(e) => handleSkillChange(index, e.target.value)}
-                        className="px-3 py-1 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full text-sm focus:border-blue-500 outline-none text-gray-900 dark:text-white"
+                        className="px-3 py-1 bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-white rounded-full text-sm focus:border-blue-500 outline-none text-gray-900 dark:text-white"
                       />
                       <button
                         onClick={() => removeSkill(index)}
@@ -396,7 +400,7 @@ const About = () => {
                       </button>
                     </div>
                   ) : (
-                    <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm transition-colors">
+                    <span className="px-3 py-1 bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-full text-sm transition-colors">
                       {skill}
                     </span>
                   )}
@@ -405,7 +409,7 @@ const About = () => {
               {isEditMode && (
                 <button
                   onClick={addSkill}
-                  className="px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300 rounded-full text-sm hover:bg-blue-200 dark:hover:bg-blue-700 transition-colors"
+                  className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full text-sm hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
                 >
                   + Add Skill
                 </button>
@@ -418,8 +422,8 @@ const About = () => {
             <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6 transition-colors">Experience</h3>
             <div className="space-y-6">
               {displayData.experience.map((exp, index) => (
-                <div key={index} className="border-l-4 border-gray-200 dark:border-gray-700 pl-6 relative transition-colors">
-                  <div className="absolute w-3 h-3 bg-gray-400 dark:bg-gray-500 rounded-full -left-2 top-2 transition-colors"></div>
+                <div key={index} className="border-l-4 border-gray-200 dark:border-white pl-6 relative transition-colors">
+                  <div className="absolute w-3 h-3 bg-gray-400 dark:bg-gray-300 rounded-full -left-2 top-2 transition-colors"></div>
                   {isEditMode ? (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -427,7 +431,7 @@ const About = () => {
                           type="text"
                           value={exp.company}
                           onChange={(e) => handleExperienceChange(index, 'company', e.target.value)}
-                          className="font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent"
+                          className="font-semibold text-gray-900 dark:text-white border-b border-gray-300 dark:border-white focus:border-blue-500 outline-none bg-transparent"
                           placeholder="Company"
                         />
                         <button
@@ -441,14 +445,14 @@ const About = () => {
                         type="text"
                         value={exp.role}
                         onChange={(e) => handleExperienceChange(index, 'role', e.target.value)}
-                        className="text-gray-700 dark:text-gray-300 w-full border-b border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent"
+                        className="text-gray-700 dark:text-gray-300 w-full border-b border-gray-300 dark:border-white focus:border-blue-500 outline-none bg-transparent"
                         placeholder="Role"
                       />
                       <input
                         type="text"
                         value={exp.period}
                         onChange={(e) => handleExperienceChange(index, 'period', e.target.value)}
-                        className="text-gray-500 dark:text-gray-400 text-sm w-full border-b border-gray-300 dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent"
+                        className="text-gray-500 dark:text-gray-400 text-sm w-full border-b border-gray-300 dark:border-white focus:border-blue-500 outline-none bg-transparent"
                         placeholder="Period"
                       />
                     </div>
